@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #000;
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.topnav {
+  background-color: lightblue;
+  padding-block: 12px;
+}
+.topnav .title {
+  margin: 0;
+}
+
