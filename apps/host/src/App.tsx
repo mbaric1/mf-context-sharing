@@ -1,46 +1,63 @@
+import { createRemoteComponent } from '@module-federation/bridge-react';
 import { loadRemote } from '@module-federation/enhanced/runtime';
-import { lazy } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { NavContext } from 'shared';
+import './App.css';
 import Home from './components/home';
+import useTopnav from './hooks/useTopnav';
 import RootLayout from './layouts/root.layout';
 import { initRemoteModules } from './utils/remote.utils';
 
-import { createRemoteComponent } from '@module-federation/bridge-react';
-import './App.css';
-
 initRemoteModules();
 
-const RemoteApp = lazy(() => loadRemote('remote/App') as any);
+const RemoteApp = lazy(() => loadRemote('remote/App') as never);
+
+const Loading = () => <div>Loading...</div>;
 
 const RemoteAppBridged = createRemoteComponent({
   loader: () => loadRemote('remote/Bridged'),
   fallback: () => <div>Error...</div>,
-  loading: <div>Loading...</div>,
-});
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    Component: RootLayout,
-    children: [
-      {
-        index: true,
-        Component: Home,
-      },
-      {
-        path: 'remote',
-        Component: RemoteApp,
-      },
-      {
-        path: 'remote-bridged',
-        Component: RemoteAppBridged as any,
-      },
-    ],
-  },
-]);
+  loading: <Loading />,
+}) as any;
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  const ctx = useTopnav('Host');
+
+  const router = useMemo(
+    () =>
+      createBrowserRouter([
+        {
+          path: '/',
+          Component: RootLayout,
+          children: [
+            {
+              index: true,
+              Component: Home,
+            },
+            {
+              path: 'remote',
+              element: (
+                <Suspense fallback={<Loading />}>
+                  <RemoteApp nav={ctx} />
+                </Suspense>
+              ),
+            },
+            {
+              path: 'remote-bridged',
+              element: <RemoteAppBridged nav={ctx} />,
+            },
+          ],
+        },
+      ]),
+    [ctx],
+  );
+
+  return (
+    <NavContext.Provider value={ctx}>
+      <RouterProvider router={router} />
+    </NavContext.Provider>
+  );
 };
 
 export default App;
