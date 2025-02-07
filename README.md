@@ -38,3 +38,9 @@ The second link navigates to the remote app that is bridged using the `@module-f
 
 When working with the bridge components, the context needs to be passed as a prop, and a new context has to be created.
 Context is held within the app tree of the React itself.
+
+# Conclusion
+
+In conclusion, this example successfully illustrates how to share React Context between a host and a remote application using a shared library.
+
+The demo showcases two approaches: direct import and module federation bridging, with the latter requiring context to be passed as a prop and a new context to be created.

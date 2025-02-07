@@ -39,7 +39,7 @@ const App = () => {
               path: 'remote',
               element: (
                 <Suspense fallback={<Loading />}>
-                  <RemoteApp nav={ctx} />
+                  <RemoteApp />
                 </Suspense>
               ),
             },
