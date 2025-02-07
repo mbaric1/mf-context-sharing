@@ -1,12 +1,12 @@
 import { loadRemote } from '@module-federation/enhanced/runtime';
 import { lazy } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './components/home';
 import RootLayout from './layouts/root.layout';
 import { initRemoteModules } from './utils/remote.utils';
 
-import './App.css';
 import { createRemoteComponent } from '@module-federation/bridge-react';
+import './App.css';
 
 initRemoteModules();
 
@@ -18,18 +18,29 @@ const RemoteAppBridged = createRemoteComponent({
   loading: <div>Loading...</div>,
 });
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    Component: RootLayout,
+    children: [
+      {
+        index: true,
+        Component: Home,
+      },
+      {
+        path: 'remote',
+        Component: RemoteApp,
+      },
+      {
+        path: 'remote-bridged',
+        Component: RemoteAppBridged as any,
+      },
+    ],
+  },
+]);
+
 const App = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route Component={RootLayout}>
-          <Route index Component={Home}></Route>
-          <Route path="remote" Component={RemoteApp}></Route>
-          <Route path="remote-bridged" Component={RemoteAppBridged}></Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;

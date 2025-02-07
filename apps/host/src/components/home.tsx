@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -7,10 +7,10 @@ const Home = () => {
       <p>Welcome to the home page</p>
       <ul>
         <li>
-          <NavLink to="/remote">Go to remote app</NavLink>
+          <Link to="/remote">Go to remote app</Link>
         </li>
         <li>
-          <NavLink to="/remote-bridged">Go to remote bridged app</NavLink>
+          <Link to="/remote-bridged">Go to remote bridged app</Link>
         </li>
       </ul>
     </div>
