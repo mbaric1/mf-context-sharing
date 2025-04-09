@@ -1,4 +1,4 @@
-# Intro
+# Overview
 
 This example demonstrates how to share React Context between Host and Remote App by using shared library.
 
